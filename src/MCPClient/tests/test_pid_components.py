@@ -10,7 +10,7 @@ from itertools import chain
 
 import pytest
 import vcr
-from job import Job
+from client.job import Job
 from main.models import DashboardSetting
 from main.models import Directory
 from main.models import File
