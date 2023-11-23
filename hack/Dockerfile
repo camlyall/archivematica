@@ -1,5 +1,4 @@
 ARG TARGET=archivematica-mcp-server
-
 ARG UBUNTU_VERSION=22.04
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -219,7 +218,7 @@ ENV ARCHIVEMATICA_MCPCLIENT_CLIENTSCRIPTSDIRECTORY /src/src/MCPClient/lib/client
 COPY src/archivematicaCommon/lib/externals/fido/ /usr/lib/archivematica/archivematicaCommon/externals/fido/
 COPY src/archivematicaCommon/lib/externals/fiwalk_plugins/ /usr/lib/archivematica/archivematicaCommon/externals/fiwalk_plugins/
 
-ENTRYPOINT pyenv exec python${PYTHON_VERSION} -m /src/src/MCPClient/lib/archivematicaClient.py
+ENTRYPOINT ["pyenv", "exec", "python3", "/src/src/MCPClient/lib/archivematicaClient.py"]
 
 # -----------------------------------------------------------------------------
 
@@ -230,7 +229,7 @@ ARG PYTHON_VERSION=3.9
 ENV DJANGO_SETTINGS_MODULE settings.common
 ENV PYTHONPATH /src/src/MCPServer/lib/:/src/src/archivematicaCommon/lib/:/src/src/dashboard/src/
 
-ENTRYPOINT pyenv exec python${PYTHON_VERSION} -m /src/src/MCPServer/lib/archivematicaMCP.py
+ENTRYPOINT ["pyenv", "exec", "python3", "/src/src/MCPServer/lib/archivematicaMCP.py"]
 
 # -----------------------------------------------------------------------------
 
@@ -271,7 +270,7 @@ ENV DJANGO_SETTINGS_MODULE settings.production
 
 EXPOSE 8000
 
-ENTRYPOINT pyenv exec python${PYTHON_VERSION} -m gunicorn --config=/src/src/dashboard/install/dashboard.gunicorn-config.py wsgi:application
+ENTRYPOINT ["pyenv", "exec", "python3", "-m", "gunicorn", "--config=/src/src/dashboard/install/dashboard.gunicorn-config.py", "wsgi:application"]
 
 # -----------------------------------------------------------------------------
 
