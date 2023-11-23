@@ -179,8 +179,9 @@ RUN set -ex \
 	&& add-apt-repository --no-update --yes "deb http://archive.ubuntu.com/ubuntu/ jammy multiverse" \
 	&& add-apt-repository --no-update --yes "deb http://archive.ubuntu.com/ubuntu/ jammy-security universe" \
 	&& add-apt-repository --no-update --yes "deb http://archive.ubuntu.com/ubuntu/ jammy-updates multiverse" \
-	&& curl --retry 3 --silent --output /tmp/repo-mediaarea_1.0-21_all.deb --location https://mediaarea.net/repo/deb/repo-mediaarea_1.0-21_all.deb \
-	&& dpkg --install /tmp/repo-mediaarea_1.0-21_all.deb \
+	&& curl --retry 3 --silent --output /tmp/repo-mediaarea.deb --location https://mediaarea.net/repo/deb/repo-mediaarea_1.0-24_all.deb \
+	&& dpkg --install /tmp/repo-mediaarea.deb \
+	&& rm /tmp/repo-mediaarea.deb \
 	&& apt-get --quiet --yes update \
 	&& apt-get --quiet --yes --no-install-recommends install \
 		libyaml-dev clamav \
