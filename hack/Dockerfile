@@ -48,7 +48,7 @@ RUN set -ex \
 	&& pyenv install ${PYTHON_VERSION} \
 	&& pyenv global ${PYTHON_VERSION}
 
-COPY requirements-dev.txt requirements-dev.txt
+COPY --link requirements-dev.txt requirements-dev.txt
 
 RUN set -ex \
 	&& pyenv exec python${PYTHON_VERSION} -m pip install --upgrade pip setuptools \
@@ -86,7 +86,7 @@ RUN set -ex \
 
 FROM node:${NODE_VERSION} AS archivematica-dashboard-frontend-builder
 
-COPY src/dashboard/frontend /src/src/dashboard/frontend
+COPY --link src/dashboard/frontend /src/src/dashboard/frontend
 
 WORKDIR /src/src/dashboard/frontend
 
@@ -117,7 +117,7 @@ RUN set -ex \
 
 COPY --chown=${USER_ID}:${GROUP_ID} --from=browsers-builder --link ${SELENIUM_DIR} ${SELENIUM_DIR}
 COPY --chown=${USER_ID}:${GROUP_ID} --from=archivematica-dashboard-frontend-builder --link /src/src/dashboard/frontend/node_modules /src/src/dashboard/frontend/node_modules
-COPY src/dashboard/frontend /src/src/dashboard/frontend
+COPY --link src/dashboard/frontend /src/src/dashboard/frontend
 
 WORKDIR /src/src/dashboard/frontend
 
@@ -168,10 +168,10 @@ RUN set -ex \
 RUN locale-gen en_US.UTF-8
 
 # OS dependencies
-COPY hack/osdeps.py /src/hack/osdeps.py
-COPY src/dashboard/osdeps /src/src/dashboard/osdeps
-COPY src/MCPServer/osdeps /src/src/MCPServer/osdeps
-COPY src/MCPClient/osdeps /src/src/MCPClient/osdeps
+COPY --link hack/osdeps.py /src/hack/osdeps.py
+COPY --link src/dashboard/osdeps /src/src/dashboard/osdeps
+COPY --link src/MCPServer/osdeps /src/src/MCPServer/osdeps
+COPY --link src/MCPClient/osdeps /src/src/MCPClient/osdeps
 RUN set -ex \
 	&& curl --retry 3 --silent https://packages.archivematica.org/GPG-KEY-archivematica | apt-key add - \
 	&& add-apt-repository --no-update --yes "deb [arch=amd64] http://packages.archivematica.org/1.15.x/ubuntu-externals jammy main" \
@@ -191,7 +191,7 @@ RUN set -ex \
 RUN freshclam --quiet
 
 COPY --chown=${USER_ID}:${GROUP_ID} --from=pyenv-builder --link ${PYENV_DIR} ${PYENV_DIR}
-COPY --chown=${USER_ID}:${GROUP_ID} . /src
+COPY --chown=${USER_ID}:${GROUP_ID} --link . /src
 
 RUN set -ex \
 	&& groupadd --gid ${GROUP_ID} --system archivematica \
@@ -215,8 +215,8 @@ ENV ARCHIVEMATICA_MCPCLIENT_CLIENTSCRIPTSDIRECTORY /src/src/MCPClient/lib/client
 
 # Some scripts in archivematica-fpr-admin executed by MCPClient rely on certain
 # files being available in this image (e.g. see https://git.io/vA1wF).
-COPY src/archivematicaCommon/lib/externals/fido/ /usr/lib/archivematica/archivematicaCommon/externals/fido/
-COPY src/archivematicaCommon/lib/externals/fiwalk_plugins/ /usr/lib/archivematica/archivematicaCommon/externals/fiwalk_plugins/
+COPY --link src/archivematicaCommon/lib/externals/fido/ /usr/lib/archivematica/archivematicaCommon/externals/fido/
+COPY --link src/archivematicaCommon/lib/externals/fiwalk_plugins/ /usr/lib/archivematica/archivematicaCommon/externals/fiwalk_plugins/
 
 ENTRYPOINT ["pyenv", "exec", "python3", "/src/src/MCPClient/lib/archivematicaClient.py"]
 
