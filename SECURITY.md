@@ -1,10 +1,10 @@
 # Security Policy
 
 This document outlines security procedures and general policies for the
-Archivematica project. See https://www.archivematica.org for more information
+Archivematica project. See <https://www.archivematica.org> for more information
 about Archivematica.
 
-**Contents**
+## Contents
 
 * [Reporting a security vulnerability](#reporting-a-security-vulnerability)
 * [Disclosure policy](#disclosure-policy)
