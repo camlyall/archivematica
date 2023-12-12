@@ -3,25 +3,18 @@ name: "Acceptance Test"
 on:
   pull_request:
     types: [labeled]
+  push:
+    branches:
+      - "dev/trigger-ci"
 jobs:
   test:
-    if: github.event.label.name == 'AMAUAT'
     name: "Test ${{ matrix.tag }} on ${{ matrix.browser }}"
     runs-on: "ubuntu-22.04"
     strategy:
       fail-fast: false
       matrix:
         tag:
-          - "aip-encrypt"
-          - "aip-encrypt-mirror"
           - "black-box"
-          - "icc"
-          - "ipc preservation"
-          - "ipc access"
-          - "metadata-xml"
-          - "tcc"
-          - "tpc"
-          - "uuids-dirs"
         browser:
           - "Firefox"
           - "Chrome"
@@ -60,3 +53,11 @@ jobs:
       - name: "Run AMAUAT tag"
         run: |
           make -C hack/ test-at-behave TAGS="${{ matrix.tag }}" BROWSER=${{ matrix.browser }}
+      - name: "Show logs"
+        if: ${{ !cancelled() }}
+        run: |
+          docker compose logs archivematica-mcp-server
+          docker compose logs archivematica-mcp-client
+          docker compose logs archivematica-dashboard
+          docker compose logs archivematica-storage-service
+        working-directory: ./hack
